@@ -34,6 +34,8 @@
 
         .modal-body {
             color: gray;
+            max-height: 600px;
+            overflow-y: scroll;
         }
     }
 }

@@ -113,7 +113,7 @@ const  QueryContextProvider = ({ children }) => {
             }
         }
 
-        const csv = parse(values, [ 'patternID', 'pathID', 'branchID', 'sourceEntityId', 'sourceEntityType', 'relation', 'destinationEntityType']);
+        const csv = parse(values, { fields: [ 'patternID', 'pathID', 'branchID', 'sourceEntityId', 'sourceEntityType', 'relation', 'destinationEntityType']});
         return csv;
 	}
 

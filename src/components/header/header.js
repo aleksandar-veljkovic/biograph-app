@@ -4,6 +4,7 @@ import { useState, useContext, createRef } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import { GraphContext } from "../../contexts/graph-context";
 import { QueryContext } from "../../contexts/query-context";
+import { BioAccordion } from "../accordion/bio-accordion";
 import { Modal } from "../modal/modal";
 
 export const Header = () => {
@@ -12,6 +13,7 @@ export const Header = () => {
     const { loadFromQuery, clearGraph } = useContext(GraphContext);
     const [isLoadVisible, setIsLoadVisible] = useState(false);
     const [isExamplesVisible, setIsExamplesVisible] = useState(false);
+    const [isHelpVisible, setIsHelpVisible] = useState(false);
 
     const queryRef = createRef();
 
@@ -75,6 +77,55 @@ export const Header = () => {
                 </Modal>
             }
 
+            { isHelpVisible &&
+                <Modal 
+                    onClose={() => setIsHelpVisible(false)}
+                    title="Help"
+                >
+                    <h3>About the project</h3>
+                    <p className="text-normal">
+                        This application was designed as a tool to help connect metadata from very diverse biological databases and enable joint queries over all collected metadata.
+                        The software was created as part of the PhD project at University of Belgrade, Faculty of Mathematics, by student <a href="mailto:aleksandar@matf.bg.ac.rs">Aleksandar Veljković</a>.
+                    </p>
+
+                    <h3>Data sources</h3>
+                    <p className="text-normal">The metadata currently linked in our database is imported from four external databases:</p>
+                        <ul>
+                            <li><a href="https://disprot.org">DisProt</a></li>
+                            <li><a href="https://www.genenames.org/">HGNC</a></li>
+                            <li><a href="https://www.disgenet.org/">DisGeNET</a></li>
+                            <li><a href="http://projects.met-hilab.org/tadb/">Tantigen 2.0</a></li>
+                        </ul>
+                    <p className="text-normal">We are constantly expanding the list of our datasets.</p>
+
+                    <h3>FAQ</h3>
+
+                    <BioAccordion title="What is BioGraph?">
+                        BioGraph is a graph structure constructed of metadata from multiple biological databases.
+                        One biological entity may contain data fragments in various databases. BioGraph
+                        recognizes those fragments and links them to a single entity in a graph, enabling efficient, uniform, search over all linked datasets. 
+                    </BioAccordion>
+                    <BioAccordion title="How to query data?">
+                        ...
+                    </BioAccordion>
+                    <BioAccordion title="How to draw nodes?">
+                        ...
+                    </BioAccordion>
+                    <BioAccordion title="How to connect nodes?">
+                        ...
+                    </BioAccordion>
+                    <BioAccordion title="How to add parameters?">
+                        ...
+                    </BioAccordion>
+                    <BioAccordion title="How to read the results?">
+                        ...
+                    </BioAccordion>
+                    <BioAccordion title="How to navigate through data graph?">
+                        ...
+                    </BioAccordion>
+                </Modal>
+            }
+
             <div className="header-left">
                 <span className="logo">BioGraph</span>
 
@@ -108,7 +159,7 @@ export const Header = () => {
                 </div>
             </div>
             <div className="header-right">
-                <a className="header-item" href="#">
+                <a className="header-item" href="#" onClick={() => setIsHelpVisible(true)}>
                     <HelpOutline/>
                     Help
                 </a>
