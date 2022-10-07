@@ -1,0 +1,28 @@
+@import '../components/graph-display/graph-display';
+@import '../components/results-table/results-table';
+@import '../components/loader/loader';
+@import '../components/single-node-viewer/single-node-viewer';
+@import '../components/data-table/data-table';
+@import '../components/data-panel/data-panel';
+@import '../components/header/header';
+@import '../components/modal/modal';
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	overflow-y:hidden;
+}
+
+option {
+	color: black;
+}
+
+a {
+	text-decoration: none;
+}

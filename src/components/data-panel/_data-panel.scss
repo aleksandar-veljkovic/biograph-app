@@ -1,0 +1,16 @@
+.data-panel {
+	.data-panel-header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		background-color: #149eee;
+		padding: 5px;
+		border-radius: 5px 5px 0 0;
+		margin-top: 30px;
+		margin-bottom: 10px;	
+		color: white;
+		font-weight: bold;
+		cursor: pointer;
+	}
+}
