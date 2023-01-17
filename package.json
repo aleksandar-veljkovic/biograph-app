@@ -24,6 +24,7 @@
     "mysql2": "^2.3.3",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
+    "react-debounce-input": "^3.3.0",
     "react-drag-drop-files": "^2.3.7",
     "react-flow-renderer": "^9.6.4",
     "react-perfect-scrollbar": "^1.5.8",

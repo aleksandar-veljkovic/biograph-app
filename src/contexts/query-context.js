@@ -12,13 +12,38 @@ const  QueryContextProvider = ({ children }) => {
 	const host = 'http://127.0.0.1';
 	const port = 8765;
 	const [isBusy, setIsBusy] = useState(false);
+	const [isSearchBusy, setIsSearchBusy] = useState(false);
+	const searchCancelToken = useRef(null); 
 	const [isTableBusy, setIsTableBusy] = useState(false);
 	const [singleNode, setSingleNode] = useState(null);
 
 	const currentQuery = useRef(null);
 	const rawQuery = useRef(null);
 
-    console.log(results);
+    // console.log(results);
+
+	const runSearch = (queryString, entityType, cancelToken) => {
+		console.log(entityType);
+		
+
+		searchCancelToken.current = axios.CancelToken.source();
+
+		return new Promise((resolve, reject) => {
+			axios.get(`${host}:${port}/search`, 
+				{
+					params: { q: queryString, entityType },
+					cancelToken,
+				}
+			).then(res => {
+				console.log(res);
+				resolve(res.data)
+			})
+			.catch (err => {
+				console.log(err);
+				reject(err)
+			})
+		})
+	}
 
 	const runQuery = (graphQuery) => {
 		console.log(graphQuery);
@@ -123,7 +148,21 @@ const  QueryContextProvider = ({ children }) => {
 	}
 
 	return (
-		<QueryContext.Provider value={{ clearResults, results, isBusy, isTableBusy, runQuery, getNode, singleNode, clearSelectedNode, currentQuery, resultsToCsv, rawQuery, exampleQueries: exampleQueries }}>
+		<QueryContext.Provider value={{ 
+			clearResults, 
+			results, 
+			isBusy, 
+			isTableBusy, 
+			runQuery, 
+			getNode, 
+			singleNode, 
+			clearSelectedNode, 
+			currentQuery, 
+			resultsToCsv, 
+			rawQuery, 
+			exampleQueries,
+			runSearch,
+		}}>
 			{ children }
 		</QueryContext.Provider>
 	)

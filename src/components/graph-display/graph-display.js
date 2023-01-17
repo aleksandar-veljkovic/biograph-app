@@ -42,7 +42,9 @@ export const GraphDisplay = ({ onQuery }) => {
 	 * @param {} params 
 	 */
   const onConnect = (params) => {
-		createEdge(params);
+		if (params.source != params.target) {
+			createEdge(params);
+		}
 	};
 
 	/**
@@ -51,6 +53,8 @@ export const GraphDisplay = ({ onQuery }) => {
 	const generateQuery = () => {
 		const match = [];
 		const params = {};
+
+		console.log(edges);
 
 		let numEdges = 0;
 		
@@ -66,6 +70,9 @@ export const GraphDisplay = ({ onQuery }) => {
 
 				const edgeProperties = [];
 				for (const property of edge.data.properties) {
+					if (property.field == null || property.operator == null || property.value == null) {
+						continue;
+					}
 					const fromType = sourceNode.data.entityType;
 					const toType = targetNode.data.entityType;
 					console.log(fromType, toType, edgeSchema[fromType][toType].find(p => p.edgeType === edgeType));
@@ -103,6 +110,12 @@ export const GraphDisplay = ({ onQuery }) => {
 
 			params[node.data.defaultLabel] = { identifiers: [], data: []};
 			for (const property of node.data.properties) {
+				console.log(property);
+				if (property.field == null || property.operator == null || property.value == null) {
+					continue;
+				}
+
+				console.log(availableNodeProperties[node.data.entityType], property.field);
 				const propertyInfo = availableNodeProperties[node.data.entityType].find(p => p.value === property.field);
 				if (propertyInfo.identifier) {
 					params[node.data.defaultLabel].identifiers.push({ value: property.value });

@@ -1,0 +1,18 @@
+.icon-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .icon-input-field {
+        border: none !important;
+        width: 100%;
+        font-size: 12px !important;
+        font-weight: normal !important;
+    }
+
+    .icon {
+        position: absolute;
+        right: 20px;
+        color: rgb(163, 163, 163);
+    }
+}

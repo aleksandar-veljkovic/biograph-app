@@ -7,18 +7,13 @@ export const GraphContext = createContext();
 const availableNodeProperties = {
 		unselected:[],
 		Gene: [{
-			value: 'geneId',
+			value: 'identifier',
 			label: 'Gene ID',
-			identifier: true,
-		},
-		{
-			value: 'geneName',
-			label: 'Gene Name',
 			identifier: true,
 		}],
 
 		Protein: [{
-			value: 'proteinId',
+			value: 'identifier',
 			label: 'Protein ID',
 			identifier: true,
 		},
@@ -247,13 +242,17 @@ export const GraphContextProvider = ({ children }) => {
 	}
 
 	// Update node
-	const updateNode = (nodeId, updateObj) => {
+	const updateNode = (nodeId, updateObj, silent=false) => {
 		const node = getNode(nodeId);
 
 		const { data } = node;
 		node.data = {...data, ...updateObj};
 		rawQuery.current = JSON.stringify({ nodes, edges }, null, 2);
-		setNodes([...nodes]);
+
+		console.log(silent)
+		if (!silent) {
+			setNodes([...nodes]);
+		}
 	}
 
 	const addNodeProperty = (nodeId, field, operator, value) => {
@@ -263,7 +262,7 @@ export const GraphContextProvider = ({ children }) => {
 		updateNode(nodeId, { properties });
 	}
 
-	const updateNodeProperty = (nodeId, propertyIndex, field, operator, value) => {
+	const updateNodeProperty = (nodeId, propertyIndex, field, operator, value, silent=false) => {
 		const node = getNode(nodeId);
 		const { properties } = node.data;
 		const property = properties[propertyIndex];
@@ -273,6 +272,10 @@ export const GraphContextProvider = ({ children }) => {
 			...(operator && { operator }),
 			...(value && { value }),
 		};
+		updateNode(nodeId, { properties }, silent);
+	}
+
+	const setNodeProperties = (nodeId, properties) => {
 		updateNode(nodeId, { properties });
 	}
 
@@ -338,13 +341,16 @@ export const GraphContextProvider = ({ children }) => {
 		setEdges([...edges, edge]);
 	}
 
-	const updateEdge = (edgeId, updateObj) => {
+	const updateEdge = (edgeId, updateObj, silent=false) => {
 		const edgeIndex = edges.findIndex(edge => edge.id == edgeId)
 		const edge = edges[edgeIndex];
 		const { data } = edge;
 		edges[edgeIndex].data = {...data, ...updateObj};
 		rawQuery.current = JSON.stringify({ nodes, edges }, null, 2);
-		setEdges([...edges]);
+
+		if (!silent) {
+			setEdges([...edges]);
+		}
 	}
 
 	const addEdgeProperty = (edgeId, field, operator, value) => {
@@ -354,12 +360,18 @@ export const GraphContextProvider = ({ children }) => {
 		updateEdge(edgeId, { properties });
 	}
 
-	const updateEdgeProperty = (edgeId, propertyIndex, updateObj) => {
+	const updateEdgeProperty = (edgeId, propertyIndex, field, operator, value, silent=false) => {
+		
 		const edge = getEdge(edgeId);
 		const { properties } = edge.data;
 		const property = properties[propertyIndex];
-		properties[propertyIndex] = { ...property, ...updateObj };
-		updateEdge(edgeId, { properties });
+		properties[propertyIndex] = { 
+			...property, 
+			...(field && { field }),
+			...(operator && { operator }),
+			...(value && { value }),
+		};
+		updateEdge(edgeId, { properties }, silent);
 	}
 
 	const removeEdgeProperty = (edgeId, propertyIndex) => {
@@ -517,6 +529,7 @@ export const GraphContextProvider = ({ children }) => {
 			addNode,
 			updateNode,
 			addNodeProperty,
+			setNodeProperties,
 			updateNodeProperty,
 			removeNodeProperty,
 			toggleNodeIncluded,

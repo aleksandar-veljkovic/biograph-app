@@ -6,6 +6,8 @@
 @import '../components/data-panel/data-panel';
 @import '../components/header/header';
 @import '../components/modal/modal';
+@import '../components/icon-input/icon-input';
+@import '../components/search-autocomplete/search-autocomplete';
 
 * {
 	box-sizing: border-box;
@@ -30,4 +32,17 @@ a {
 .text-normal {
 	font-weight: normal;
 	color: black;
+}
+
+* {
+	&::-webkit-scrollbar {
+		width: 7px;
+	}
+
+	&::-webkit-scrollbar-thumb
+	{
+	  border-radius: 10px;
+	  -webkit-box-shadow: inset 0 0 6px rgba(189, 189, 189, 0.3);
+	  background-color: rgb(153, 153, 153);
+	}
 }
