@@ -62,7 +62,7 @@ export const SingleNodeViewer = ({ nodeData }) => {
 													groupedIdentifiers.map(identifier => 
 														({ 
 															identifier_title: identifier.title,
-															identifier_value:  identifier.type.includes('uri') ? <a href={identifier.value} target="_blank">{identifier.value}</a> : identifier.value,
+															identifier_value:  identifier.type.includes('url') ? <a href={identifier.value} target="_blank">{identifier.value}</a> : identifier.value,
 														}))}
 												columns={[{name: 'Identifier', key: 'identifier_title'}, {name: 'Value', key: 'identifier_value'}]}
 											/>
@@ -94,7 +94,7 @@ export const SingleNodeViewer = ({ nodeData }) => {
 								<h3>Relations</h3>
 								{ Object.keys(neighborGroups).length > 0 ? (
 									Object.keys(neighborGroups).map(groupKey => (
-										<DataPanel title={`With ${ neighborGroups[groupKey].name }s (${neighborGroups[groupKey].connections.length})`}>
+										<DataPanel title={`With ${ neighborGroups[groupKey].name }${ neighborGroups[groupKey].name[neighborGroups[groupKey].name.length - 1] == 's' ? 'es' : 's'} (${neighborGroups[groupKey].connections.length})`}>
 											{
 													<DataTable 
 														columns={[
@@ -110,7 +110,7 @@ export const SingleNodeViewer = ({ nodeData }) => {
 														rows={neighborGroups[groupKey].connections.map(el => ({ 
 															...el, 
 															edgeType: Utilities.beautifyCamelCase(el.edgeType),
-															id: <span className="node-link" onClick={() => getNode(el.id)}>{el.id}</span>,
+															id: <span className="node-link" onClick={() => getNode(el.id, neighborGroups[groupKey].name )}>{el.id}</span>,
 															...el.edgeData,
 														}))}
 													/>

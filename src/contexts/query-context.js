@@ -66,7 +66,7 @@ const  QueryContextProvider = ({ children }) => {
 		setSingleNode(null);
 	}
 
-	const getNode = (primaryId) => {
+	const getNode = (primaryId, entityType) => {
 		return new Promise((resolve, reject) => {
 			setSingleNode(null);
 			setIsTableBusy(true);
@@ -74,6 +74,7 @@ const  QueryContextProvider = ({ children }) => {
 			{
 				params: {
 					primaryId,
+					entityType,
 					// entityType: Utilities.capitalize(entityType),
 				}
 			}

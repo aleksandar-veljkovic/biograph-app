@@ -102,6 +102,7 @@ export function GraphNode({ id, data }) {
 						>
 							<option value='unselected' disabled>Select type</option>
 							<option value="Gene">Gene</option>
+							<option value="Organism">Organism</option>
 							<option value="Protein">Protein</option>
 							<option value="Disease">Disease</option>
 							<option value="Antigen">Tumor antigen</option>

@@ -1,75 +1,9 @@
 import React, { createContext, useContext, useState } from "react";
 import Utilities from "../services/utilities/utilities";
 import { QueryContext } from "./query-context";
+import availableNodeProperties from "./schemas/available-node-properties";
 
 export const GraphContext = createContext();
-
-const availableNodeProperties = {
-		unselected:[],
-		Gene: [{
-			value: 'identifier',
-			label: 'Gene ID',
-			identifier: true,
-		}],
-
-		Protein: [{
-			value: 'identifier',
-			label: 'Protein ID',
-			identifier: true,
-		},
-		{
-			value: 'proteinName',
-			label: 'Protein Name',
-			identifier: true,
-		},
-		{
-			value: 'disorder_content',
-			label: 'Disorder content',
-			isNumeric: true,
-		},
-		{
-			value: 'regions_counter',
-			label: 'Num. regions',
-			isNumeric: true,
-		}
-	],
-
-	Disease: [
-		{
-			value: 'diseaseId',
-			label: 'Disease ID',
-			identifier: true,
-		},
-		{
-			value: 'disease_type',
-			label: 'Disease Type'
-		}
-	],
-	Antigen: [
-		{
-			value: 'antigenId',
-			label: 'Antigen ID',
-			identifier: true,
-		},
-	],
-	Epitope: [
-		{
-			value: 'epitopeId',
-			label: 'Epitope ID',
-			identifier: true,
-		},
-		{
-			value: 'positionFrom',
-			label: 'Start pos.',
-			isNumeric: true,
-		},
-		{
-			value: 'positionTo',
-			label: 'End pos.',
-			isNumeric: true,
-		}
-	]
-	};
 
 const themes = {
 		unselected: {
@@ -78,6 +12,11 @@ const themes = {
 			icon: require('../assets/icons/gene-icon.png'),
 		},
 		Gene: {
+			color: '#C894D5',
+			colorLight: '#F8DBFF',
+			icon: require('../assets/icons/gene-icon.png'),
+		},
+		Organism: {
 			color: '#C894D5',
 			colorLight: '#F8DBFF',
 			icon: require('../assets/icons/gene-icon.png'),
@@ -122,14 +61,14 @@ const edgeSchema = {
 		],
 		Organism: [
 			{
-				edgeType: 'FROM_ORGANISM',
+				edgeType: 'FROM',
 				label: 'Protein from organism',
 				properties: [],
 			},
 		],
 		Gene: [
 			{
-				edgeType: 'FROM_GENE',
+				edgeType: 'FROM',
 				label: 'Protein from gene',
 				properties: [],
 			}
@@ -138,29 +77,51 @@ const edgeSchema = {
 	Gene: {
 		Antigen: [
 			{
-				edgeType: 'IS_ANTIGEN',
+				edgeType: 'IS',
 				label: 'Gene is antigen',
 				properties: [],
 			}
-		]
+		],
+		Organism: [
+			{
+				edgeType: 'FROM',
+				label: 'Gene from organism',
+				properties: [],
+			},
+		],
 	},
 	Antigen: {
 		Antigen: [
 			{
-				edgeType: 'IS_ISOFORM',
+				edgeType: 'IS',
 				label: 'Antigens are isoform',
-				properties: [],
+				properties: [{
+					value: 'equalityType',
+					label: 'ISOFORM',
+					isNumeric: true,
+				}],
 			},
 			{
-				edgeType: 'IS_MUTATION_ENTRY',
+				edgeType: 'IS',
 				label: 'Antigens are mutations',
+				properties: [{
+					value: 'equalityType',
+					label: 'MUTATION_ENTRY',
+					isNumeric: true,
+				}],
+			},
+		],
+		Organism: [
+			{
+				edgeType: 'FROM',
+				label: 'Antigen from organism',
 				properties: [],
-			}
+			},
 		],
 		Epitope: [
 			{
-				edgeType: 'HAS_EPITOPE',
-				label: 'Antigen has epitope',
+				edgeType: 'CONTAINS',
+				label: 'Antigen contains epitope',
 				properties: [],
 			}
 		],
@@ -191,7 +152,7 @@ const edgeSchema = {
 	Disease: {
 		Gene: [
 			{
-				edgeType: 'RELATED_GENE',
+				edgeType: 'IS_RELATED_WITH',
 				label: 'Disease related gene',
 				properties: [
 					{
@@ -201,8 +162,16 @@ const edgeSchema = {
 					}
 				],
 			}
-		]
+		],
+		Organism: [
+			{
+				edgeType: 'FROM',
+				label: 'Disease from organism',
+				properties: [],
+			},
+		],
 	},
+	Organism: {},
 	Epitope: {}
 }
 
@@ -446,6 +415,7 @@ export const GraphContextProvider = ({ children }) => {
 					edgeProperties.push({
 						key: property.field,
 						op: property.operator,
+						isNumeric,
 						value: isNumeric ? parseFloat(property.value) : property.value,
 					});
 				}
@@ -479,7 +449,7 @@ export const GraphContextProvider = ({ children }) => {
 				if (propertyInfo.identifier) {
 					params[node.data.defaultLabel].identifiers.push({ value: property.value });
 				} else {
-					params[node.data.defaultLabel].data.push({ key: property.field, op: property.operator, value: propertyInfo.isNumeric ? parseFloat(property.value) : property.value, isNumeric: propertyInfo.isNumeric})
+					params[node.data.defaultLabel].data.push({ key: property.field, op: property.operator, isNumber: propertyInfo.isNumeric, value: propertyInfo.isNumeric ? parseFloat(property.value) : property.value, isNumeric: propertyInfo.isNumeric})
 				}
 			}
 		}
